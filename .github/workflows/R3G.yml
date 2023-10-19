@@ -11,7 +11,7 @@ on:
 
 env:
   OPNAME: 'R3G'
-  REPO_URL: https://github.com/coolsnowwolf/lede
+  REPO_URL: https://github.com/2789618099/lede
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: configs/R3G.config
