@@ -33,7 +33,7 @@
 
 **主界面：**
 
-![](https://img-blog.csdnimg.cn/1393d35df218470596bb2937594c03cb.jpeg)
+![](https://img-blog.csdnimg.cn/1393d35df218470596bb2937594c03cb.eg)
 
 
 
