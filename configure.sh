@@ -15,8 +15,8 @@
 #echo "src-git PWluci https://github.com/xiaorouji/openwrt-passwall.git;luci" >> feeds.conf.default
 
 #通常这两个就够了
-#echo "src-git kenzo https://github.com/kenzok8/openwrt-packages" >> feeds.conf.default
-#echo "src-git small https://github.com/kenzok8/small" >> feeds.conf.default
+echo "src-git kenzo https://github.com/kenzok8/openwrt-packages" >> feeds.conf.default
+echo "src-git small https://github.com/kenzok8/small" >> feeds.conf.default
 
 # 替换默认主题
 #rm -rf package/lean/luci-theme-argon 
