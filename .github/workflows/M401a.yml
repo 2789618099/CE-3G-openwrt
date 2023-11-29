@@ -10,7 +10,7 @@ name: M401a-openwrt
         default: 'false'
 
 env:
-  OPNAME: 'M401a'
+  OPNAME: 'M401a-openwrt'
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
