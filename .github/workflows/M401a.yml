@@ -1,4 +1,4 @@
-name: M401a
+name: M401a-openwrt
 
 于:
   repository_dispatch:
