@@ -1,4 +1,4 @@
-name: R3G-PT
+name: R3G-Lean
 
 on:
   repository_dispatch:
@@ -10,7 +10,7 @@ on:
         default: 'false'
 
 env:
-  OPNAME: 'R3G-PT'
+  OPNAME: 'R3G-Lean'
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
