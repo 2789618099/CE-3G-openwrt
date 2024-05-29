@@ -2,7 +2,7 @@
 # 修改默认系统设置
 
 # 修改默认IP
-sed -i 's/192.168.1.1/192.168.5.1/g' package/base-files/files/bin/config_generate 
+sed -i 's/192.168.1.1/192.168.8.1/g' package/base-files/files/bin/config_generate 
 sed -i 's/192.168.15.1/192.168.5.1/g' package/base-files/files/bin/config_generate
 
 # passwall
@@ -18,5 +18,5 @@ echo "src-git small https://github.com/kenzok8/small" >> feeds.conf.default
 
 #设置内核版本为5.10
 #sed -i 's/KERNEL_PATCHVER:=5.15/KERNEL_PATCHVER:=5.10/g' ./target/linux/ramips/Makefile
-#sed -i 's/KERNEL_PATCHVER:=5.4/KERNEL_PATCHVER:=5.10/g' ./target/linux/ramips/Makefile
+sed -i 's/KERNEL_PATCHVER:=5.4/KERNEL_PATCHVER:=5.10/g' ./target/linux/ramips/Makefile
 
