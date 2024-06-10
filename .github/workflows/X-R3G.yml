@@ -11,7 +11,7 @@ on:
 
 env:
   OPNAME: 'X-R3G'
-  REPO_URL: https://github.com/wszx3394/x-wrt.git
+  REPO_URL: https://github.com/x-wrt/x-wrt.git
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: configs/X-R3G.config
