@@ -1,7 +1,7 @@
 #!/bin/bash
 #git clone  https://github.com/bigbugcc/OpenwrtApp package/OpenwrtApp
 #git clone  https://github.com/zzsj0928/luci-app-pushbot package/luci-app-pushbot
-git clone  https://github.com/destan19/OpenAppFilter package/OpenAppFilter
+#git clone  https://github.com/destan19/OpenAppFilter package/OpenAppFilter
 
 # vssr
 #git clone https://github.com/jerrykuku/lua-maxminddb.git package/lua-maxminddb
