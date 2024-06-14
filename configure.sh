@@ -10,8 +10,8 @@ sed -i 's/192.168.15.1/192.168.5.1/g' package/base-files/files/bin/config_genera
 #echo "src-git PWluci https://github.com/xiaorouji/openwrt-passwall.git;luci" >> feeds.conf.default
 
 #通常这两个插件库就够了(优先级修改最高)
-sed -i '1i src-git kenzo https://github.com/kenzok8/openwrt-packages' feeds.conf.default
-sed -i '2i src-git small https://github.com/kenzok8/small' feeds.conf.default
+sed -i '2i src-git kenzo https://github.com/kenzok8/openwrt-packages' feeds.conf.default
+sed -i '3i src-git small https://github.com/kenzok8/small' feeds.conf.default
 
 # 修改默认主题
 #sed -i 's/luci-theme-bootstrap/luci-theme-argon/g' feeds/luci/collections/luci/Makefile
