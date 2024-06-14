@@ -1,4 +1,4 @@
-name: X-R3G
+name: dan
 
 on:
   repository_dispatch:
