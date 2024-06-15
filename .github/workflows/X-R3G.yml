@@ -78,6 +78,7 @@ jobs:
 
     - name: 应用补丁
       run: |
+        mkdir -p openwrt/patches
         cp $GITHUB_WORKSPACE/$PATCH_FILE openwrt/patches/
         cd openwrt
         patch -p1 < patches/$(basename $PATCH_FILE)
