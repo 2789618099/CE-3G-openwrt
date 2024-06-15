@@ -32,6 +32,8 @@ jobs:
     steps:
     - name: 检出代码
       uses: actions/checkout@v3
+      with:
+        node-version: '20'
 
     - name: 初始化环境
       env:
@@ -113,6 +115,8 @@ jobs:
 
     - name: 上传 bin 目录
       uses: actions/upload-artifact@v3
+      with:
+        node-version: '20'
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
         name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
@@ -129,6 +133,8 @@ jobs:
 
     - name: 上传固件目录
       uses: actions/upload-artifact@v3
+      with:
+        node-version: '20'
       if: steps.organize.outputs.status == 'success'
       with:
         name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
@@ -146,6 +152,8 @@ jobs:
 
     - name: 上传固件到发布
       uses: softprops/action-gh-release@v1
+      with:
+        node-version: '20'
       if: steps.tag.outputs.status == 'success'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
