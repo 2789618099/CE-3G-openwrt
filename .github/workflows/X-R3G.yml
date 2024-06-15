@@ -30,11 +30,6 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - name: 设置 Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
-
     - name: 检出代码
       uses: actions/checkout@v3
 
@@ -79,12 +74,10 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/$PACKS
 
-    - name: 应用补丁
+    - name: 复制补丁文件
       run: |
         mkdir -p openwrt/patches
         cp $GITHUB_WORKSPACE/$PATCH_FILE openwrt/patches/
-        cd openwrt
-        patch -p1 < patches/$(basename $PATCH_FILE)
 
     - name: SSH 连接到 Actions
       uses: P3TERX/ssh2actions@v1.0.0
