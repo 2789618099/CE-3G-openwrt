@@ -8,48 +8,66 @@ env:
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 16 1 * ?'
+    - cron: '0 16 1 * *'  # 每月1号的16:00 UTC运行
 
 jobs:
   check:
     runs-on: ubuntu-latest
 
     steps:
-
-    - name: Get Commit Hash
-      id: getHash
+    - name: 克隆代码仓库
       run: |
-        git clone --depth 1 $REPO_URL -b $REPO_BRANCH .
-        echo "::set-output name=commitHash::$(git rev-parse HEAD)"
+        git clone --depth 1 $REPO_URL -b $REPO_BRANCH repository
+        cd repository
+        echo "最新提交的哈希值为：$(git rev-parse HEAD)"
+        echo "commitHash=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
-    - name: Compare Commit Hash
-      id: cacheHash
+    - name: 缓存提交哈希
       uses: actions/cache@v2
       with:
-        path: .commitHash
-        key: HEAD-${{ steps.getHash.outputs.commitHash }}
+        path: repository/.commitHash
+        key: ${{ runner.os }}-commit-${{ env.commitHash }}
+        restore-keys: |
+          ${{ runner.os }}-commit-
 
-    - name: Save New Commit Hash
-      if: steps.cacheHash.outputs.cache-hit != 'true'
+    - name: 比较提交哈希
+      id: checkHash
       run: |
-        echo ${{ steps.getHash.outputs.commitHash }} | tee .commitHash
+        if [ -f repository/.commitHash ]; then
+          last_commit=$(cat repository/.commitHash)
+          if [ "$last_commit" == "${{ env.commitHash }}" ]; then
+            echo "提交哈希未改变，无需触发编译。"
+            echo "::set-output name=build_needed::false"
+          else
+            echo "提交哈希改变，准备触发编译。"
+            echo "::set-output name=build_needed::true"
+          fi
+        else
+          echo "未找到提交哈希，触发编译。"
+          echo "::set-output name=build_needed::true"
+        fi
 
-    - name: Trigger build
-      if: steps.cacheHash.outputs.cache-hit != 'true'
+    - name: 保存新提交哈希
+      if: steps.checkHash.outputs.build_needed == 'true'
+      run: |
+        echo "${{ env.commitHash }}" > repository/.commitHash
+
+    - name: 触发构建
+      if: steps.checkHash.outputs.build_needed == 'true'
       uses: peter-evans/repository-dispatch@v1
       with:
         token: ${{ secrets.OP_ACTIONS_TRIGGER_PAT }}
         event-type: Source Code Update
 
-    - name: Delete workflow runs
+    - name: 删除旧的工作流运行
       uses: GitRML/delete-workflow-runs@main
       with:
         retain_days: 1
         keep_minimum_runs: 1
 
-    - name: Remove old Releases
+    - name: 删除旧发布版本
+      if: env.UPLOAD_RELEASE == 'true'
       uses: dev-drprasad/delete-older-releases@v0.2.0
-      if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
         keep_latest: 7
         delete_tags: true
