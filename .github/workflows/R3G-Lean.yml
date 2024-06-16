@@ -137,7 +137,33 @@ jobs:
         files: ${{ env.FIRMWARE }}/*
 
     - name: 删除工作流运行记录
-      uses: actions/delete-workflow-runs@v2  # 使用最新版本
+      uses: actions/github-script@v6
       with:
-        retain_days: 1
-        keep_minimum_runs: 3
+        script: |
+          const { deleteWorkflowRun } = require('@actions/github').rest.actions;
+          const { owner, repo } = context.repo;
+          const runId = context.runId;
+          const retainDays = 1;
+          const keepMinimumRuns = 3;
+          const runs = await octokit.rest.actions.listWorkflowRuns({
+            owner,
+            repo,
+            workflow_id: context.workflow,
+            per_page: 100,
+          });
+          const runsToDelete = runs.data.workflow_runs
+            .filter(run => run.id !== runId)
+            .filter(run => {
+              const runDate = new Date(run.created_at);
+              const daysDifference = (Date.now() - runDate.getTime()) / (1000 * 60 * 60 * 24);
+              return daysDifference > retainDays && runs.data.workflow_runs.length > keepMinimumRuns;
+            });
+
+          for (const run of runsToDelete) {
+            await octokit.rest.actions.deleteWorkflowRun({
+              owner,
+              repo,
+              run_id: run.id,
+            });
+            console.log(`Deleted workflow run: ${run.id}`);
+          }
