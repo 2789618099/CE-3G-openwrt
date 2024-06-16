@@ -30,7 +30,7 @@ jobs:
 
     steps:
     - name: 检出代码
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3  # 更新到 v3 以使用 Node.js 20
 
     - name: 设置环境
       run: |
@@ -100,7 +100,7 @@ jobs:
       run: df -hT
 
     - name: 上传 bin 目录
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3  # 更新到 v3 以使用 Node.js 20
       if: env.UPLOAD_BIN_DIR == 'true'
       with:
         name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
@@ -115,7 +115,7 @@ jobs:
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
 
     - name: 上传固件
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3  # 更新到 v3 以使用 Node.js 20
       if: steps.organize.outputs.status == 'success'
       with:
         name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
@@ -124,46 +124,15 @@ jobs:
     - name: 生成发布标签
       id: tag
       if: env.UPLOAD_RELEASE == 'true'
-      run: echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
+      run: echo "release_tag=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_ENV
 
     - name: 上传固件到发布
-      uses: softprops/action-gh-release@v1
-      if: steps.tag.outputs.release_tag
+      uses: softprops/action-gh-release@v1  # 更新到最新版本以支持 Node.js 20
+      if: env.release_tag
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         name: ${{ env.OPNAME }}
-        tag_name: ${{ steps.tag.outputs.release_tag }}
+        tag_name: ${{ env.release_tag }}
         files: ${{ env.FIRMWARE }}/*
 
-    - name: 删除工作流运行记录
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const { deleteWorkflowRun } = require('@actions/github').rest.actions;
-          const { owner, repo } = context.repo;
-          const runId = context.runId;
-          const retainDays = 1;
-          const keepMinimumRuns = 3;
-          const runs = await octokit.rest.actions.listWorkflowRuns({
-            owner,
-            repo,
-            workflow_id: context.workflow,
-            per_page: 100,
-          });
-          const runsToDelete = runs.data.workflow_runs
-            .filter(run => run.id !== runId)
-            .filter(run => {
-              const runDate = new Date(run.created_at);
-              const daysDifference = (Date.now() - runDate.getTime()) / (1000 * 60 * 60 * 24);
-              return daysDifference > retainDays && runs.data.workflow_runs.length > keepMinimumRuns;
-            });
-
-          for (const run of runsToDelete) {
-            await octokit.rest.actions.deleteWorkflowRun({
-              owner,
-              repo,
-              run_id: run.id,
-            });
-            console.log(`Deleted workflow run: ${run.id}`);
-          }
