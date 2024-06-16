@@ -130,4 +130,14 @@ jobs:
       uses: softprops/action-gh-release@v1
       if: steps.tag.outputs.release_tag
       env:
-        GITHU
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        name: ${{ env.OPNAME }}
+        tag_name: ${{ steps.tag.outputs.release_tag }}
+        files: ${{ env.FIRMWARE }}/*
+
+    - name: 删除工作流运行记录
+      uses: actions/delete-workflow-runs@v2  # 使用最新版本
+      with:
+        retain_days: 1
+        keep_minimum_runs: 3
