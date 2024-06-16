@@ -76,8 +76,7 @@ jobs:
 
     - name: 复制补丁文件
       run: |
-        mkdir -p openwrt/patches
-        cp $GITHUB_WORKSPACE/$PATCH_FILE openwrt/patches/
+        cp $GITHUB_WORKSPACE/$PATCH_FILE openwrt/package/libs/mbedtls/patches/
 
     - name: SSH 连接到 Actions
       uses: P3TERX/ssh2actions@v1.0.0
