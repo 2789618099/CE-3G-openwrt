@@ -74,9 +74,11 @@ jobs:
         cd openwrt
         $GITHUB_WORKSPACE/$PACKS
 
-    - name: 复制补丁文件
+    - name: 复制补丁文件并应用补丁
       run: |
         cp $GITHUB_WORKSPACE/$PATCH_FILE openwrt/package/libs/mbedtls/patches/
+        cd openwrt/package/libs/mbedtls
+        patch -p1 < patches/101-fix-mbedtls3.6-build.patch || { echo "Patch failed!"; exit 1; }
 
     - name: SSH 连接到 Actions
       uses: P3TERX/ssh2actions@v1.0.0
@@ -130,31 +132,4 @@ jobs:
       if: steps.organize.outputs.status == 'success'
       with:
         name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
-        path: ${{ env.FIRMWARE }}
-
-    - name: 生成发布标签
-      id: tag
-      if: env.UPLOAD_RELEASE == 'true'
-      run: |
-        echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
-        touch release.txt
-        [ $UPLOAD_COWTRANSFER == true ] && echo "🔗 [Cowtransfer](${{ steps.cowtransfer.outputs.url }})" >> release.txt
-        [ $UPLOAD_WETRANSFER == true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
-        echo "::set-output name=status::success"
-
-    - name: 上传固件到发布
-      uses: softprops/action-gh-release@v1
-      if: steps.tag.outputs.status == 'success'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        name: ${{ env.OPNAME }}
-        tag_name: ${{ steps.tag.outputs.release_tag }}
-        body_path: release.txt
-        files: ${{ env.FIRMWARE }}/*
-
-    - name: 删除工作流运行记录
-      uses: GitRML/delete-workflow-runs@v1
-      with:
-        retain_days: 1
-        keep_minimum_runs: 3
+        path: ${{ env
