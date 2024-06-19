@@ -56,8 +56,7 @@
 -        err = mbedtls_cipher_auth_encrypt(cipher_ctx->evp, n, nlen, ad, adlen,
 -                                          m, mlen, c, clen, c + mlen, tlen);
 +        err = mbedtls_cipher_auth_encrypt_ext(cipher_ctx->evp, n, nlen, ad, adlen,
-+                                          m, mlen, c, *clen, clen, tlen);
-+                                          m, mlen, c, *clen, c + mlen, tlen);
++                                              m, mlen, c, *clen, clen, tlen);
          *clen += tlen;
          break;
      case CHACHA20POLY1305IETF:
@@ -68,7 +67,7 @@
 -        err = mbedtls_cipher_auth_decrypt(cipher_ctx->evp, n, nlen, ad, adlen,
 -                                          m, mlen - tlen, p, plen, m + mlen - tlen, tlen);
 +        err = mbedtls_cipher_auth_decrypt_ext(cipher_ctx->evp, n, nlen, ad, adlen,
-+                                          m, mlen - tlen, p, *plen, plen - tlen, tlen);
++                                              m, mlen - tlen, p, *plen, plen - tlen, tlen);
          break;
      case CHACHA20POLY1305IETF:
          err = crypto_aead_chacha20poly1305_ietf_decrypt(p, &long_plen, NULL, m, mlen,
