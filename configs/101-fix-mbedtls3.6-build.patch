@@ -57,6 +57,7 @@
 -                                          m, mlen, c, clen, c + mlen, tlen);
 +        err = mbedtls_cipher_auth_encrypt_ext(cipher_ctx->evp, n, nlen, ad, adlen,
 +                                          m, mlen, c, *clen, clen, tlen);
++                                          m, mlen, c, *clen, c + mlen, tlen);
          *clen += tlen;
          break;
      case CHACHA20POLY1305IETF:
