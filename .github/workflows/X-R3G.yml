@@ -17,7 +17,6 @@ env:
   CONFIG_FILE: configs/X-R3G.config
   SYS_CONF_SH: configure.sh
   PACKS: package.sh
-  PATCH_FILE: configs/101-fix-mbedtls3.6-build.patch
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_COWTRANSFER: false
@@ -73,12 +72,6 @@ jobs:
         chmod +x $PACKS
         cd openwrt
         $GITHUB_WORKSPACE/$PACKS
-
-    - name: 复制补丁文件并应用补丁
-      run: |
-        cp $GITHUB_WORKSPACE/$PATCH_FILE openwrt/package/libs/mbedtls/patches/
-        cd openwrt/package/libs/mbedtls
-        patch -p1 < patches/101-fix-mbedtls3.6-build.patch || { echo "Patch failed!"; exit 1; }
 
     - name: SSH 连接到 Actions
       uses: P3TERX/ssh2actions@v1.0.0
