@@ -23,7 +23,7 @@ sed -i '$a src-git smpackage https://github.com/kenzok8/small-package' feeds.con
 
 #设置内核版本为5.10
 #sed -i 's/KERNEL_PATCHVER:=5.15/KERNEL_PATCHVER:=5.10/g' ./target/linux/ramips/Makefile
-sed -i 's/KERNEL_PATCHVER:=5.4/KERNEL_PATCHVER:=5.10/g' ./target/linux/ramips/Makefile
+#sed -i 's/KERNEL_PATCHVER:=5.4/KERNEL_PATCHVER:=5.10/g' ./target/linux/ramips/Makefile
 
 #拉取最新版golang编译
 #rm -rf feeds/packages/lang/golang
